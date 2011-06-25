@@ -20,7 +20,7 @@
           y.log('No searchquery specified.');
           y.exit();
         }
-        var search = 'select * from html where url="http://www.fz.se/sok/?q=$searchquery$&m=0&priorityValue_3=100&priorityValue_1=100&priorityValue_4=100&priorityValue_7=100&priorityValue_6=110&priorityValue_2=50&t%5B%5D=5&priorityValue_5=140" and xpath="//div[starts-with(@class, \'clearfix search_result game\')]';
+        var search = 'select * from html where url="http://www.fz.se/sok/?q=$searchquery$&m=0&priorityValue_3=100&priorityValue_1=100&priorityValue_4=100&priorityValue_7=100&priorityValue_6=110&priorityValue_2=50&t%5B%5D=5&priorityValue_5=140" and xpath="//div[starts-with(@class, \'clearfix search_result game\')]"';
         search = search.replace("$searchquery$",searchquery);
 
         var xml = y.query(search).results;
