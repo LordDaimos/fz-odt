@@ -112,53 +112,7 @@
         var queryoutput = y.query(finalquery).results;
         response.object = <passage>{stringListValue(queryoutput)}</passage>;    
       */
-
-        function stringValue(node) {
-            var value = "";
-            if (node.hasSimpleContent()) {
-                value = node.toString();
-            } else {
-                for each (var c in node.children()) {
-                    value += stringValue(c);
-                }
-            }
-            return value;
-        }
-        
-        function stringListValue(node) {
-            var value = "";
-            if (node.hasSimpleContent()) {
-                value = node.toString();
-            } else {
-                for each (var c in node.children()) {
-                    value += stringValue(c) + " ";
-                }
-                value = value.replace(/, $/,'');
-            }
-            return value;
-        }
-
-        function listEditions(node) {
-          var value = "";
-          for each (var edition in node.children()) {
-            value += edition.input.(@name == 'true').toString();
-            if (edition.input.(@name != 'true').length() > 0) {
-              value += " (";
-              for each (var input in edition.input.(@name != 'true')) {
-                value += input.toString();
-                value += ",";
-              }
-              value = value.replace(/,$/,'');
-              value += ")";
-            }
-            value += " - ";
-            value += edition.language.toString();
-            value += ", ";
-          }
-          value = value.replace(/, $/,'');
-          return value;
-        }
-
+        response.object = <nodes></nodes>
       ]]>
       </execute>
     </select>
