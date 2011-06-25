@@ -24,6 +24,8 @@
         search = search.replace("$searchquery$",searchquery);
 
         var xml = y.query(search).results;
+        y.log(xml);
+        /*
         var edition;
         if (editions.edition.length() < 1) {
           var supported_editionsquery = 'select edition from xml where url="http://github.com/vicmortelmans/BibleConfiguration/raw/master/editions.xml"';
@@ -109,7 +111,7 @@
         }
         var queryoutput = y.query(finalquery).results;
         response.object = <passage>{stringListValue(queryoutput)}</passage>;    
-      
+      */
 
         function stringValue(node) {
             var value = "";
