@@ -3,8 +3,8 @@
   <meta>
     <author>Karl-Johan Sjögren</author>
     <description>The table returns a game searchresult for a string on FZ.se.</description>
-    <sampleQuery>select * from bible.bible where language='en' and book='Luke' and chapter=11 and passage=10</sampleQuery>
-    <documentationURL>http://docs.google.com/View?id=ddq89pzk_155t6rwmkhp</documentationURL>
+    <sampleQuery>use "http://www.kallesbildarkiv.se/dev/fz.odt/fz.search.xml";select * from fz.search where searchquery = 'elder%20scrolls';</sampleQuery>
+    <documentationURL></documentationURL>
   </meta>
   <bindings>
     <select produces="JSON" itemPath="">
@@ -15,18 +15,69 @@
         <key id="searchquery" type="xs:string" paramType="variable" required="false"/>
       </inputs>
       <execute>
-        <![CDATA[ 
+        <![CDATA[
+        response.maxAge = 1; // Cache time in seconds of the response, should be upped later.
         if (!searchquery) {
           y.log('No searchquery specified.');
           y.exit();
         }
-        var search = 'select * from html where url="http://www.fz.se/sok/?q=$searchquery$&m=0&priorityValue_3=100&priorityValue_1=100&priorityValue_4=100&priorityValue_7=100&priorityValue_6=110&priorityValue_2=50&t%5B%5D=5&priorityValue_5=140" and xpath="//div[starts-with(@class, \'clearfix search_result game\')]"';
-        search = search.replace("$searchquery$",searchquery);
 
-        var xml = y.query(search).results;
-        y.log(xml);
+        var search = 'http://www.fz.se/sok/?q=$searchquery$&m=0&priorityValue_3=100&priorityValue_1=100&priorityValue_4=100&priorityValue_7=100&priorityValue_6=110&priorityValue_2=50&t%5B%5D=5&priorityValue_5=140';
+        search = search.replace("$searchquery$",searchquery);
+        var res = y.rest(search).accept('text/html').get().response;
         
-        response.object = <nodes></nodes>;
+        var items = <items></items>;
+        
+        var resultDivs = y.xpath(res, "//div[starts-with(@class, 'clearfix search_result game')]");
+        for each(div in resultDivs) {
+          var addItem = false;
+				  var title = y.xpath(div, "//div[@class='title']/h2/a");
+          var description = y.xpath(div, "//div[@class='body']/p");
+          var image = y.xpath(div, "//div[@class='image']/a/img");
+
+          //y.log('html: ' + div);
+
+				  var item = <item></item>;
+
+          if(title && title.@href.toString().length > 0)
+          {
+            var fixedTitle = title.toString().replace('\n', ' ');
+            var fixedLink = title.@href.toString().replace('\n', ' ');
+            
+            //y.log('title: ' + fixedTitle);
+            //y.log('href: ' + fixedLink);
+          
+            item.appendChild( <title>{fixedTitle}</title> );
+            item.appendChild( <link>{fixedLink}</link> );
+            addItem = true;
+          }
+        
+          if(description && description.toString().length > 0)
+          {
+            var fixedDescription = description.toString().replace('\n', ' ');
+
+            //y.log('description: ' + fixedDescription);
+          
+            item.appendChild( <description>{fixedDescription}</description> );
+            addItem = true;
+          }
+        
+          if(image && image.@src.toString().length > 0)
+          {
+            var fixedImage = image.@src.toString().replace('\n', ' ');
+
+            //y.log('image: ' + fixedImage);
+          
+            item.appendChild( <image>{fixedImage}</image> );
+            addItem = true;
+          }
+        
+          if(addItem) {
+            items.appendChild(item);
+          }
+			  }
+        
+        response.object = items;
       ]]>
       </execute>
     </select>
