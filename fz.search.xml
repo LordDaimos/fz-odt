@@ -3,7 +3,7 @@
   <meta>
     <author>Karl-Johan Sjögren</author>
     <description>The table returns a game searchresult for a string on FZ.se.</description>
-    <sampleQuery>use "http://www.kallesbildarkiv.se/dev/fz.odt/fz.search.xml";select * from fz.search where searchquery = 'elder%20scrolls';</sampleQuery>
+    <sampleQuery>use "https://raw.github.com/LordDaimos/fz-odt/master/fz.search.xml";select * from fz.search where searchquery = 'elder%20scrolls';</sampleQuery>
     <documentationURL></documentationURL>
   </meta>
   <bindings>
